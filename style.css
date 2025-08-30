@@ -1,0 +1,738 @@
+/* ======================= FONTES E VARIÁVEIS ======================= */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+:root {
+    --primary-green: #3E8D38;
+    --accent-yellow: #FFD700;
+    --dark-bg: #121212;
+    --dark-card: #1E1E1E;
+    --text-color: #E0E0E0;
+    --white-color: #FFFFFF;
+    --header-height: 4.5rem;
+    --font-family: 'Montserrat', sans-serif;
+}
+
+/* ======================= RESET BÁSICO E ESTILOS GERAIS ======================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden; /* Mantém a página estável */
+}
+
+/* Classe para travar o scroll quando o menu/modal estiver aberto */
+.body-no-scroll {
+    overflow: hidden;
+}
+
+h1, h2, h3 {
+    color: var(--white-color);
+    font-weight: 700;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.container {
+    max-width: 1120px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.section {
+    padding: 5rem 0 2rem;
+}
+
+.section__title {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--white-color);
+    background: linear-gradient(90deg, #fff 0%, #fff 50%, #fff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+        0 2px 8px rgba(255, 255, 255, 0.5),
+        0 0px 20px #fff,
+        0 1px 0 #fff;
+    position: relative;
+}
+.section__title::after {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, transparent, #fff 50%, transparent);
+    opacity: 0.7;
+}
+
+.section__subtitle {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-color);
+}
+
+/* ======================= BOTÕES ======================= */
+.button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button--primary {
+    background: linear-gradient(90deg, #A8FF9E 0%, #3E8D38 50%, #A8FF9E 100%);
+    color: var(--white-color);
+    font-weight: 700;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(168, 255, 158, 0.5), 0 0px 20px #A8FF9E, 0 1px 0 #fff;
+    transition: box-shadow 0.3s, transform 0.3s;
+    border: none;
+    background-clip: border-box;
+    -webkit-background-clip: border-box;
+}
+
+.button--primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(168, 255, 158, 0.7), 0 0px 20px #A8FF9E, 0 2px 12px #fff;
+    filter: brightness(1.08);
+}
+
+.button--secondary {
+    background-color: transparent;
+    color: var(--white-color);
+    border: 2px solid var(--primary-green);
+}
+
+/* CORREÇÃO DO BOTÃO SECUNDÁRIO */
+/* Estilo para o momento do clique/toque */
+.button--secondary:active {
+    background-color: var(--primary-green);
+}
+/* Estilo de hover apenas para dispositivos com mouse */
+@media (hover: hover) {
+    .button--secondary:hover {
+        background-color: var(--primary-green);
+    }
+}
+
+
+.button--whatsapp {
+    background-color: #25D366;
+    color: white;
+    font-size: 1.19rem;
+    padding: 1rem 2.2rem;
+    border-radius: 50px;
+}
+.button--whatsapp i {
+    margin-right: 0.5rem;
+}
+
+/* ======================= CABEÇALHO E NAVEGAÇÃO ======================= */
+.header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.nav {
+    height: var(--header-height);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* NOVA REGRA: Esconde a logo do menu em telas grandes por padrão */
+.nav__menu-logo {
+    display: none;
+}
+
+.nav__list {
+    display: flex;
+    gap: 6rem;
+}
+
+.nav__link {
+    font-weight: 900;
+    transition: color 0.3s;
+}
+
+.nav__link:hover {
+    color: rgba(168, 255, 158, 0.7);
+}
+
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav__toggle {
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+    z-index: 102; /* Mantém o ícone acima do menu overlay */
+    color: var(--white-color); /* Garante que o ícone seja sempre branco */
+    margin-right: 2rem; /* Afasta do canto direito */
+}
+
+/* ======================= SEÇÃO HERO ======================= */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background-image: url('https://via.placeholder.com/1920x1080/333333/FFFFFF?Text=Placeholder+Drone');
+    background-size: cover;
+    background-position: center;
+    color: var(--white-color);
+    padding-top: var(--header-height);
+}
+
+.hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero__content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero__logo {
+    max-width: 180px;
+    margin: 0 auto 2rem;
+}
+
+.hero__title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: transparent;
+    background: linear-gradient(90deg, #fff 0%, #A8FF9E 50%, #fff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+        0 2px 8px rgba(255, 255, 255, 0.7),
+        0 0px 20px #A8FF9E,
+        0 1px 0 #fff;
+    position: relative;
+}
+.hero__title::after {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, #A8FF9E 50%, transparent);
+    opacity: 0.8;
+    filter: blur(2px);
+}
+
+.hero__subtitle {
+    font-size: 1.30rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* ======================= SERVIÇOS ======================= */
+.services__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.2rem;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.service__card {
+    background-color: var(--dark-card);
+    padding: 2.5rem;
+    border-radius: 13px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 90%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.service__card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.service__icon {
+    font-size: 3rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.service__title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ======================= VÍDEOS / CARROSSEL ======================= */
+#videos .container {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 1200px;
+}
+
+.splide__slide {
+    padding: 0 1rem;
+}
+
+.video__placeholder {
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.video__placeholder:hover {
+    border-color: var(--primary-green);
+}
+
+.video__placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.video__placeholder:hover img {
+    transform: scale(1.05);
+}
+
+.video__placeholder::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    transition: background-color 0.3s ease;
+}
+
+.video__placeholder .fa-play-circle {
+    position: absolute;
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.video__placeholder:hover .fa-play-circle {
+    transform: scale(1.1);
+    color: var(--white-color);
+}
+
+/* ESTILIZAÇÃO CUSTOMIZADA DO CARROSSEL SPLIDE */
+.splide__arrow {
+    background-color: var(--primary-green);
+    opacity: 0.8;
+}
+.splide__arrow:hover {
+    opacity: 1;
+}
+.splide__arrow svg {
+    fill: var(--white-color);
+}
+.splide__pagination__page {
+    background-color: #555;
+}
+.splide__pagination__page.is-active {
+    background-color: var(--primary-green);
+    transform: scale(1.2);
+}
+
+/* ======================= MODAL DE VÍDEO ======================= */
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s ease;
+}
+
+.video-modal.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.video-modal__content {
+    position: relative;
+    width: 90%;
+    max-width: 1100px;
+    aspect-ratio: 16 / 9;
+}
+
+.video-modal__content video {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.video-modal__close {
+    position: absolute;
+    top: -45px;
+    right: 0;
+    font-size: 3rem;
+    color: var(--white-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ======================= BENEFÍCIOS ======================= */
+.benefits {
+    background-color: var(--dark-card);
+}
+.benefits__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    text-align: left;
+}
+
+.benefits__list li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+.benefits__list i {
+    font-size: 1.5rem;
+    color: var(--primary-green);
+}
+
+/* ======================= SOBRE ======================= */
+.about__container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.about__img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--dark-card);
+}
+
+.about__content h2 {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+.about__content p {
+    margin-bottom: 1rem;
+}
+
+/* ======================= CONTATO ======================= */
+#contato {
+    text-align: center;
+    
+}
+
+.contact__info {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact__info p i {
+    margin-right: 0.5rem;
+    color: var(--primary-green);
+}
+
+/* ======================= RODAPÉ (ATUALIZADO) ======================= */
+.footer {
+    background-color: var(--dark-card);
+    padding-top: 1rem; 
+}
+
+.footer__container {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 2rem;
+    padding-bottom: 1rem; 
+}
+
+.footer__section h3 {
+    margin-bottom: 1rem;
+    color: var(--white-color);
+}
+
+.footer__section ul li a:hover {
+    color: var(--primary-green);
+}
+
+.footer__socials {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer__socials a {
+    font-size: 1.5rem;
+}
+.footer__socials a:hover {
+    color: var(--primary-green);
+}
+
+.footer__copy {
+    text-align: center;
+    padding: 0.5rem;
+    border-top: 1px solid #333;
+    font-size: 0.9rem;
+}
+
+/* ======================= RESPONSIVIDADE (Media Queries) ======================= */
+
+/* Para tablets (até 768px) */
+@media screen and (max-width: 768px) {
+    .section {
+        padding: 3rem 0 2rem;
+    }
+    .section__title {
+        font-size: 3rem;
+    }
+
+    .nav {
+        justify-content: flex-end;
+    }
+
+    .nav__menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--dark-bg);
+        z-index: 101;
+        display: flex;
+        flex-direction: column; /* Alinha a logo e os links em coluna */
+        align-items: center;
+        justify-content: center;
+        transition: left 0.4s ease;
+    }
+
+    .nav__menu.show-menu {
+        left: 0;
+    }
+
+    .nav__menu-logo {
+        display: block;
+        max-width: 150px; /* Ajuste o tamanho conforme desejar */
+        margin-bottom: 4rem; /* Espaço entre a logo e os links */
+    }
+
+    .nav__list {
+        flex-direction: column;
+        gap: 3rem;
+        text-align: center;
+    }
+    
+    .nav__link {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .nav__toggle {
+        display: block;
+    }
+
+    .nav__actions .button {
+        display: none;
+    }
+    
+    .hero__title {
+        font-size: 2.5rem;
+    }
+    
+    .about__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .about__content h2 {
+        text-align: center;
+    }
+
+    .about__img {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        margin: 0 auto 2rem;
+    }
+
+    .footer__container {
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* ===== MUDANÇA PARA A SEÇÃO DE SERVIÇOS NO MOBILE ===== */
+    .services__container {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 1.5rem;
+        
+        /* Correção de alinhamento */
+        width: 100%;
+        max-width: 100%;
+        transform: none;
+        margin: 0;
+        padding: 1.5rem 1.5rem 1.5rem 0; /* Espaço para rolagem e no final */
+
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .services__container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .service__card {
+        flex: 0 0 85%;
+        max-width: 340px;
+        scroll-snap-align: center;
+    }
+
+    /* ===== MUDANÇA PARA A SEÇÃO DE BENEFÍCIOS NO MOBILE ===== */
+    .benefits__list {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        margin: 0 -1.5rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .benefits__list::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .benefits__list li {
+        flex: 0 0 80%;
+        scroll-snap-align: center;
+        flex-direction: column;
+        text-align: center;
+        background-color: var(--dark-bg);
+        padding: 2rem;
+        border-radius: 13px;
+        border: 1px solid #333;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        gap: 1.5rem;
+    }
+    
+    .benefits__list i {
+        font-size: 3rem;
+    }
+}
+
+/* Para celulares pequenos (até 480px) */
+@media screen and (max-width: 480px) {
+    .hero__logo {
+        margin-top: 2rem;
+    }
+    .section{
+        padding: 2.2rem 0 2rem;
+    }
+
+    .hero__title {
+        font-size: 2rem;
+    }
+    .hero__subtitle {
+        font-size: 1rem;
+    }
+    .hero__buttons {
+        flex-direction: column;
+    }
+    .footer__socials{
+        gap: 6rem;
+    }
+    .section__title {
+        font-size: 3rem;
+    }
+    #contato {
+    text-align: center;
+    padding: 0.4rem 0;
+}
+}
