@@ -1,121 +1,242 @@
-document.addEventListener('DOMContentLoaded', function () {
-    /* ======================= CONTROLE DO MENU MOBILE ======================= */
-    const navMenu = document.getElementById('nav-menu');
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.querySelectorAll('.nav__link');
-    const navMenuLogo = document.getElementById('nav-menu-logo'); // Pega a nova logo do menu
+// ======================= UTILITÁRIOS E HELPERS =======================
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+
+const safeExecute = (fn) => {
+    try {
+        fn();
+    } catch (error) {
+        console.warn('Erro não crítico:', error.message);
+    }
+};
+
+// ======================= CONTROLE DO MENU MOBILE =======================
+const initMobileMenu = () => {
+    const navMenu = $('#nav-menu');
+    const navToggle = $('#nav-toggle');
+    const navLinks = $$('.nav__link');
+    const navMenuLogo = $('#nav-menu-logo');
     const body = document.body;
 
-    // Função para mostrar/esconder o menu E trocar o ícone
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('show-menu');
-            body.classList.toggle('body-no-scroll');
+    if (!navToggle || !navMenu) return;
 
-            const icon = navToggle.querySelector('i');
+    const toggleMenu = () => {
+        navMenu.classList.toggle('show-menu');
+        body.classList.toggle('body-no-scroll');
+        
+        const icon = navToggle.querySelector('i');
+        if (icon) {
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');
-        });
-    }
+        }
+    };
 
-    // Função para fechar o menu
     const closeMenu = () => {
         navMenu.classList.remove('show-menu');
         body.classList.remove('body-no-scroll');
         
         const icon = navToggle.querySelector('i');
-        if (icon.classList.contains('fa-times')) {
+        if (icon?.classList.contains('fa-times')) {
             icon.classList.remove('fa-times');
             icon.classList.add('fa-bars');
         }
-    }
-    // Adiciona o evento de fechar para os links
-    navLinks.forEach(n => n.addEventListener('click', closeMenu));
-    // Adiciona o evento de fechar para a logo do menu
-    if (navMenuLogo) {
-        navMenuLogo.addEventListener('click', closeMenu);
-    }
+    };
 
-    /* ... (O restante do seu JavaScript para o carrossel e modal continua o mesmo) ... */
+    navToggle.addEventListener('click', toggleMenu);
+    navLinks.forEach(link => link.addEventListener('click', closeMenu));
+    navMenuLogo?.addEventListener('click', closeMenu);
+};
+
+// ======================= CARROSSEL SIMPLES SEM DEPENDÊNCIAS =======================
+const initSimpleCarousel = () => {
+    const carousel = $('#video-carousel');
+    if (!carousel) return;
+
+    const track = carousel.querySelector('.splide__track .splide__list');
+    const slides = track?.querySelectorAll('.splide__slide');
     
-    /* ======================= INICIALIZAÇÃO DO CARROSSEL DE VÍDEOS ======================= */
-    const videoCarousel = document.getElementById('video-carousel');
-    if (videoCarousel) {
-        new Splide(videoCarousel, {
-            type: 'loop',       // Cria um carrossel infinito
-            perPage: 3,         // 3 slides visíveis em telas grandes
-            perMove: 1,         // Move 1 slide por vez
-            gap: '1.5rem',      // Espaço entre os slides
-            pagination: true,  // Mostra os pontinhos de navegação
-            arrows: true,       // Mostra as setas de navegação
-            focus: 'center',    // Centraliza o slide ativo (se perPage for par, pode não ser perfeito)
-            breakpoints: {
-                1024: {
-                    perPage: 2, // 2 slides para tablets
-                },
-                768: {
-                    perPage: 1, // 1 slide para celulares
-                    arrows: false, // Esconde as setas em telas pequenas
-                },
-            },
-        }).mount();
-    }
+    if (!track || !slides.length) return;
 
+    let currentSlide = 0;
+    const totalSlides = slides.length;
 
-    /* ======================= CONTROLE DO MODAL DE VÍDEO (.MP4) ======================= */
-    const videoPlaceholders = document.querySelectorAll('.video__placeholder');
-    const videoModal = document.getElementById('video-modal');
-    const videoPlayer = document.getElementById('video-player');
-    const closeModalBtn = document.getElementById('video-modal-close');
+    // Criar controles de navegação
+    const createControls = () => {
+        const controlsHTML = `
+            <div class="carousel-controls">
+                <button class="carousel-btn carousel-prev" aria-label="Anterior">‹</button>
+                <div class="carousel-dots"></div>
+                <button class="carousel-btn carousel-next" aria-label="Próximo">›</button>
+            </div>
+        `;
+        carousel.insertAdjacentHTML('beforeend', controlsHTML);
+
+        // Criar dots
+        const dotsContainer = carousel.querySelector('.carousel-dots');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+            dot.setAttribute('aria-label', `Slide ${i + 1}`);
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+    };
+
+    const updateSlide = () => {
+        const slideWidth = slides[0].offsetWidth;
+        track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        
+        // Atualizar dots
+        const dots = $$('.carousel-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    };
+
+    const goToSlide = (index) => {
+        currentSlide = index;
+        updateSlide();
+    };
+
+    const nextSlide = () => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlide();
+    };
+
+    const prevSlide = () => {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlide();
+    };
+
+    createControls();
+    
+    // Event listeners
+    carousel.querySelector('.carousel-next')?.addEventListener('click', nextSlide);
+    carousel.querySelector('.carousel-prev')?.addEventListener('click', prevSlide);
+
+    // Touch/swipe support
+    let startX = 0;
+    let isDragging = false;
+
+    track.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    });
+
+    track.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+    });
+
+    track.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) nextSlide();
+            else prevSlide();
+        }
+    });
+
+    // Responsive
+    window.addEventListener('resize', updateSlide);
+};
+
+// ======================= MODAL DE VÍDEO OTIMIZADO =======================
+const initVideoModal = () => {
+    const videoPlaceholders = $$('.video__placeholder');
+    const videoModal = $('#video-modal');
+    const videoPlayer = $('#video-player');
+    const closeModalBtn = $('#video-modal-close');
+    const body = document.body;
+
+    if (!videoModal || !videoPlayer || !closeModalBtn) return;
 
     const openModal = (videoSrc) => {
-        videoPlayer.setAttribute('src', videoSrc);
+        if (!videoSrc) return;
+        
+        videoPlayer.src = videoSrc;
         videoModal.classList.add('is-open');
         body.classList.add('body-no-scroll');
-        videoPlayer.play();
+        
+        // Play com fallback
+        const playPromise = videoPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                console.warn('Autoplay bloqueado pelo navegador');
+            });
+        }
     };
 
     const closeModal = () => {
         videoModal.classList.remove('is-open');
         body.classList.remove('body-no-scroll');
         videoPlayer.pause();
-        videoPlayer.setAttribute('src', '');
+        videoPlayer.src = '';
     };
 
+    // Event listeners
     videoPlaceholders.forEach(placeholder => {
         placeholder.addEventListener('click', () => {
-            const videoSrc = placeholder.getAttribute('data-video-src');
-            if (videoSrc) {
-                openModal(videoSrc);
-            }
+            const videoSrc = placeholder.dataset.videoSrc;
+            openModal(videoSrc);
         });
     });
 
     closeModalBtn.addEventListener('click', closeModal);
 
-    videoModal.addEventListener('click', (event) => {
-        if (event.target === videoModal) {
+    videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && videoModal.classList.contains('is-open')) {
             closeModal();
         }
     });
+};
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && videoModal.classList.contains('is-open')) {
-            closeModal();
+// ======================= HEADER SCROLL OTIMIZADO =======================
+const initScrollHeader = () => {
+    const header = $('.header');
+    if (!header) return;
+
+    let ticking = false;
+    
+    const updateHeader = () => {
+        const scrolled = window.pageYOffset > 50;
+        header.style.backgroundColor = scrolled ? 'rgba(18, 18, 18, 0.9)' : 'rgba(18, 18, 18, 0.8)';
+        header.style.boxShadow = scrolled ? '0 2px 10px rgba(0, 0, 0, 0.2)' : 'none';
+        ticking = false;
+    };
+
+    const handleScroll = () => {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
         }
-    });
+    };
 
+    window.addEventListener('scroll', handleScroll, { passive: true });
+};
 
-    /* ======================= MUDAR BACKGROUND DO HEADER AO ROLAR A PÁGINA ======================= */
-    const scrollHeader = () => {
-        const header = document.querySelector('.header');
-        if (window.scrollY >= 50) {
-            header.style.backgroundColor = 'rgba(18, 18, 18, 0.9)';
-            header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
-        } else {
-            header.style.backgroundColor = 'rgba(18, 18, 18, 0.8)';
-            header.style.boxShadow = 'none';
-        }
+// ======================= SERVICE WORKER =======================
+const registerServiceWorker = () => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('SW registrado com sucesso'))
+            .catch(() => console.log('Falha no registro do SW'));
     }
-    window.addEventListener('scroll', scrollHeader);
+};
+
+// ======================= INICIALIZAÇÃO =======================
+document.addEventListener('DOMContentLoaded', () => {
+    safeExecute(initMobileMenu);
+    safeExecute(initSimpleCarousel);
+    safeExecute(initVideoModal);
+    safeExecute(initScrollHeader);
+    safeExecute(registerServiceWorker);
 });

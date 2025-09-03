@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -7,21 +7,52 @@
     <title>CF Agrícola Drones - Tecnologia de Ponta para Sua Lavoura</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"> <meta name="description" content="Serviços especializados com drones para agricultura de precisão.">
+    <meta name="description" content="Serviços especializados com drones para agricultura de precisão. Aumente a produtividade e reduza custos.">
     <meta name="keywords" content="drones agrícolas, pulverização com drone, mapeamento aéreo, agricultura de precisão, NDVI, CF Agrícola Drones, drones para lavoura, tecnologia agrícola">
     <meta name="author" content="CF Agrícola Drones">
-    <!-- <meta name="robots" content="index, follow"> <link rel="canonical" href="https://www.cfagricoladrones.com.br"> <meta property="og:title" content="CF Agrícola Drones - Tecnologia para Sua Lavoura"> -->
-    <meta property="og:description" content="Serviços especializados com drones para agricultura de precisão. Aumente a produtividade e reduza custos.">
-    <!-- <meta property="og:image" content="https://www.cfagricoladrones.com.br/images/og-image.jpg"> <meta property="og:url" content="https://www.cfagricoladrones.com.br"> <meta property="og:site_name" content="CF Agrícola Drones"> -->
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:title" content="CF Agrícola Drones - Tecnologia de Ponta para Sua Lavoura">
+    <meta property="og:description" content="Serviços especializados com drones para agricultura de precisão. Aumente a produtividade e reduza custos.">
     <meta property="og:locale" content="pt_BR">
-
+    
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="CF Agrícola Drones - Tecnologia para Sua Lavoura">
     <meta name="twitter:description" content="Serviços especializados com drones para agricultura de precisão. Aumente a produtividade e reduza custos.">
-    <!-- <meta name="twitter:image" content="https://www.cfagricoladrones.com.br/images/og-image.jpg"> <meta name="theme-color" content="#3E8D38"> <link rel="stylesheet" href="style.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    
+    <!-- Theme e PWA -->
+    <meta name="theme-color" content="#3E8D38">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CF Drones">
+    <link rel="apple-touch-icon" href="images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <noscript>
+        <style>
+            /* Fallback básico para quando JavaScript estiver desabilitado */
+            .carousel { display: block; }
+            .splide__list { display: block; }
+            .splide__slide { display: block; margin-bottom: 2rem; }
+            .video__placeholder::before { 
+                content: "▶ Vídeo"; 
+                position: absolute; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 1rem;
+                border-radius: 5px;
+            }
+            .nav__menu { position: static !important; }
+            .nav__toggle { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body>
 
@@ -100,28 +131,28 @@
                 <h2 class="section__title">Drones em Ação</h2>
                 <p class="section__subtitle">Veja como nossa tecnologia pode transformar sua produção agrícola.</p>
                 
-                <div class="splide" id="video-carousel">
+                <div class="carousel" id="video-carousel">
                     <div class="splide__track">
                         <ul class="splide__list">
                             <li class="splide__slide">
                                 <div class="video__placeholder" data-video-src="videos/video1.mp4">
-                                    <img src="videos/video1-capa.png" alt="Thumbnail do Vídeo 1">
+                                    <img src="videos/video1-capa.png" alt="Drone aplicando defensivos em lavoura - Vídeo 1" loading="lazy">
                                     <i class="far fa-play-circle"></i>
                                 </div>
                             </li>
                             <li class="splide__slide">
                                 <div class="video__placeholder" data-video-src="videos/video2.mp4">
-                                    <img src="videos/video2-capa.png" alt="Thumbnail do Vídeo 2">
+                                    <img src="videos/video2-capa.png" alt="Mapeamento aéreo com drone - Vídeo 2" loading="lazy">
                                     <i class="far fa-play-circle"></i>
                                 </div>
                             </li>
                             <li class="splide__slide">
                                 <div class="video__placeholder" data-video-src="videos/video3.mp4">
-                                    <img src="videos/video3-capa.png" alt="Thumbnail do Vídeo 3">
+                                    <img src="videos/video3-capa.png" alt="Drone em ação na agricultura - Vídeo 3" loading="lazy">
                                     <i class="far fa-play-circle"></i>
                                 </div>
                             </li>
-                            </ul>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -203,8 +234,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-    
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
