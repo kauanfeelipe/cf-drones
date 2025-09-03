@@ -59,6 +59,8 @@ const initSimpleCarousel = () => {
 
     let currentSlide = 0;
     const totalSlides = slides.length;
+    const getPerView = () => (window.innerWidth <= 768 ? 1 : (window.innerWidth <= 1024 ? 2 : 3));
+    let perView = getPerView();
 
     // Criar controles de navegação
     const createControls = () => {
@@ -70,19 +72,29 @@ const initSimpleCarousel = () => {
             </div>
         `;
         carousel.insertAdjacentHTML('beforeend', controlsHTML);
+        buildDots();
+    };
 
-        // Criar dots
+    const getMaxIndex = () => Math.max(0, totalSlides - perView);
+
+    const buildDots = () => {
         const dotsContainer = carousel.querySelector('.carousel-dots');
-        for (let i = 0; i < totalSlides; i++) {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        const numPages = getMaxIndex() + 1;
+        for (let i = 0; i < numPages; i++) {
             const dot = document.createElement('button');
-            dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
-            dot.setAttribute('aria-label', `Slide ${i + 1}`);
+            dot.className = `carousel-dot ${i === currentSlide ? 'active' : ''}`;
+            dot.setAttribute('aria-label', `Página ${i + 1}`);
             dot.addEventListener('click', () => goToSlide(i));
             dotsContainer.appendChild(dot);
         }
     };
 
     const updateSlide = () => {
+        const maxIndex = getMaxIndex();
+        if (currentSlide > maxIndex) currentSlide = maxIndex;
+        if (currentSlide < 0) currentSlide = 0;
         const slideWidth = slides[0].offsetWidth;
         track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
         
@@ -94,17 +106,19 @@ const initSimpleCarousel = () => {
     };
 
     const goToSlide = (index) => {
-        currentSlide = index;
+        const maxIndex = getMaxIndex();
+        currentSlide = Math.max(0, Math.min(index, maxIndex));
         updateSlide();
     };
 
     const nextSlide = () => {
-        currentSlide = (currentSlide + 1) % totalSlides;
+        const maxIndex = getMaxIndex();
+        currentSlide = Math.min(currentSlide + 1, maxIndex);
         updateSlide();
     };
 
     const prevSlide = () => {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        currentSlide = Math.max(currentSlide - 1, 0);
         updateSlide();
     };
 
@@ -142,7 +156,14 @@ const initSimpleCarousel = () => {
     });
 
     // Responsive
-    window.addEventListener('resize', updateSlide);
+    window.addEventListener('resize', () => {
+        const oldPerView = perView;
+        perView = getPerView();
+        if (perView !== oldPerView) {
+            buildDots();
+        }
+        updateSlide();
+    });
 };
 
 // ======================= MODAL DE VÍDEO OTIMIZADO =======================
